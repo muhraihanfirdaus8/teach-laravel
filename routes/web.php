@@ -10,3 +10,4 @@ use App\Http\Controllers\ProfilController;
 
 // Route baru yang kita tambahkan
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+Route::get('/mahasiswa/{id}', [ProfilController::class, 'show'])->name('mahasiswa.show');

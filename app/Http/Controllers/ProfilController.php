@@ -1,23 +1,15 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Models\Mahasiswa;
 
-class ProfilController extends Controller
-{
-    public function index()
-    {
-        $mahasiswa = [
-            'nama'     => 'Muhammad Raihan Firdaus',
-            'nim'      => '3337250128',
-            'prodi'    => 'Informatika',
-            'angkatan' => 2025,
-            'ipk'      => 3.95,
-            'email'    => 'muhraihanfirdaus8@gmail.com',
-            'github'   => 'muhraihanfirdaus8.com/rhaan.fds',
-            'skill'    => ['HTML', 'CSS', 'JavaScript', 'PHP', 'Laravel', 'Git'],
-            'bio'      => 'Mahasiswa Informatika UNTIRTA yang semangat belajar.',
-        ];
+class ProfilController extends Controller {
+    public function index() {
+        $mahasiswas = Mahasiswa::orderBy('ipk', 'desc')->get();
+        return view('profil', compact('mahasiswas'));
+    }
 
-        return view('profil', compact('mahasiswa'));
+    public function show($id) {
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        return view('profil-detail', compact('mahasiswa'));
     }
 }
