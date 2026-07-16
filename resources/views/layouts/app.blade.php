@@ -19,6 +19,21 @@
         <a href="{{ route('profil') }}">Profil Saya</a>
     </nav>
     <div class='container'>
+        {{-- Flash message sukses --}}
+        @if(session('success')) 
+            <div style='background:#dcfce7;color:#166534;border:1px solid #86efac;padding:14px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;'> [cite: 86, 87]
+                <span style='font-size:18px;'>✓</span> 
+                <span>{{ session('success') }}</span> 
+            </div>
+        @endif
+
+        {{-- Flash message error --}}
+        @if(session('error'))
+            <div style='background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:14px;border-radius:8px;margin-bottom:16px;'> [cite: 87, 88]
+                ⚠️ {{ session('error') }} 
+            </div>
+        @endif
+        
         @yield('content')
     </div>
     <footer>
