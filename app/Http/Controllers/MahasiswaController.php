@@ -18,10 +18,10 @@ class MahasiswaController extends Controller
         return view('mahasiswas.create');
     }
 
-
     public function store(Request $request)
     {
-        $request->validate([
+        // Menyimpan hasil validasi ke variabel $validated (Tahap 4)
+        $validated = $request->validate([
             'nama'     => 'required|string|max:100',
             'nim'      => 'required|string|unique:mahasiswas,nim',
             'prodi'    => 'required|string|max:100',
@@ -31,7 +31,10 @@ class MahasiswaController extends Controller
             'bio'      => 'nullable|string|max:500',
         ]);
 
-        Mahasiswa::create($request->all());
+        // Tambahkan user_id dari user yang sedang login (Tahap 4)
+        $validated['user_id'] = auth()->id();
+
+        Mahasiswa::create($validated);
 
         return redirect()->route('mahasiswas.index')
                          ->with('success', 'Mahasiswa berhasil ditambahkan!');
@@ -45,6 +48,12 @@ class MahasiswaController extends Controller
     public function edit($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        // Hanya pemilik data yang boleh melihat halaman edit (Tahap 5)
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengedit data ini.');
+        }
+
         return view('mahasiswas.edit', compact('mahasiswa'));
     }
 
@@ -52,7 +61,12 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
 
-        $request->validate([
+        // Hanya pemilik data yang boleh melakukan update (Tahap 5)
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $mahasiswa->update($request->validate([
             'nama'     => 'required|string|max:100',
             'nim'      => 'required|string|unique:mahasiswas,nim,' . $id, 
             'prodi'    => 'required|string|max:100',
@@ -60,9 +74,7 @@ class MahasiswaController extends Controller
             'ipk'      => 'required|numeric|min:0|max:4',
             'email'    => 'nullable|email|max:100',
             'bio'      => 'nullable|string|max:500',
-        ]);
-
-        $mahasiswa->update($request->all());
+        ]));
 
         return redirect()->route('mahasiswas.index')
                          ->with('success', "Data {$mahasiswa->nama} berhasil diperbarui!");
@@ -71,6 +83,12 @@ class MahasiswaController extends Controller
     public function destroy($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        // Hanya pemilik data yang boleh menghapus (Tahap 5)
+        if ($mahasiswa->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $nama = $mahasiswa->nama; 
         $mahasiswa->delete();
 
