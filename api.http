@@ -1,0 +1,32 @@
+### Tes 1: Lihat Daftar Mahasiswa (Publik)
+GET http://localhost:8000/api/mahasiswas
+Content-Type: application/json
+Accept: application/json
+
+
+
+### Tes 2: Login untuk Dapatkan Token
+POST http://localhost:8000/api/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "muhraihanfirdaus8@gmail.com",
+  "password": "Raihan13."
+}
+
+
+
+### Tes 3: Tambah Mahasiswa (DENGAN Token)
+POST http://localhost:8000/api/mahasiswas
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|npDCvl22IGVBcHPnJJjVNPuEdoMzb6FpIEGHjwRW4f6db9ba
+
+{
+  "nama": "Nicholas Napolion",
+  "nim": "3337240021",
+  "prodi": "Informatika",
+  "angkatan": 2024,
+  "ipk": 3.75
+}
